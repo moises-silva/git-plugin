@@ -192,6 +192,11 @@ public class GitAPI implements IGitAPI {
             args.add(repository);
             if (refspec != null)
                 args.add(refspec);
+
+            // Prune remote branches first to avoid conflicts when fetching (see [JENKINS-19591])
+            ArgumentListBuilder prune_args = new ArgumentListBuilder();
+            prune_args.add("remote", "prune", repository);
+            launchCommand(prune_args);
         }
 
         launchCommand(args);
